@@ -24,11 +24,19 @@ module.exports = function () {
     });
 
     this.When(/^I run "osrm\-extract\s?(.*?)"$/, (options, callback) => {
-        this.runAndSafeOutput('osrm-extract', options, callback);
+        let stamp = this.processedCacheFile + '.extract';
+        this.runAndSafeOutput('osrm-extract', options, (err) => {
+            if (err) return callback(err);
+            fs.writeFile(stamp, 'ok', callback);
+        });
     });
 
     this.When(/^I run "osrm\-contract\s?(.*?)"$/, (options, callback) => {
-        this.runAndSafeOutput('osrm-contract', options, callback);
+        let stamp = this.processedCacheFile + '.contract';
+        this.runAndSafeOutput('osrm-contract', options, (err) => {
+            if (err) return callback(err);
+            fs.writeFile(stamp, 'ok', callback);
+        });
     });
 
     this.When(/^I try to run "osrm\-routed\s?(.*?)"$/, (options, callback) => {
